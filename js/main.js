@@ -25,8 +25,19 @@ function createUniqueIdGenerator(min, max) {
   };
 }
 
-function getRandomValueFromArray(arr) {
-  return arr[getRandomInteger(0, arr.length - 1)];
+function getRandomValuesFromArray(arr, amount) {
+  const values = [];
+
+  while (values.length < amount && values.length !== arr.length) {
+    const index = getRandomInteger(0, arr.length - 1);
+    const value = arr[index];
+
+    if (!values.includes(value)) {
+      values.push(value);
+    }
+  }
+
+  return values;
 }
 
 function generatePhotoDescription() {
@@ -37,7 +48,7 @@ function generatePhotoDescription() {
     'Тут group loot', 'Тут далеко шлют', 'Тут глубокий омут'
   ];
 
-  return getRandomValueFromArray(DESCRIPTIONS);
+  return getRandomValuesFromArray(DESCRIPTIONS, 1).toString();
 }
 
 function generateCommentMessage() {
@@ -50,7 +61,9 @@ function generateCommentMessage() {
     'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
   ];
 
-  return getRandomValueFromArray(MESSAGES);
+  const msgArr = getRandomValuesFromArray(MESSAGES, getRandomInteger(1, 2));
+
+  return msgArr.join(' ');
 }
 
 function generateCommentAuthorName() {
@@ -58,7 +71,7 @@ function generateCommentAuthorName() {
     'Боян', 'Воин', 'Горислав', 'Господин', 'Громобой'
   ];
 
-  return getRandomValueFromArray(NAMES);
+  return getRandomValuesFromArray(NAMES, 1).toString();
 }
 
 function generateComments(generateUniquePhotoId) {
@@ -112,15 +125,12 @@ function generateData() {
   const generateUniqueCommentId = createUniqueIdGenerator(COMMENT_ID_CONSTRAINS.MIN, COMMENT_ID_CONSTRAINS.MAX);
 
   const data = [];
-
   for (let i = PHOTO_ID_CONSTRAINS.MIN; i <= PHOTO_ID_CONSTRAINS.MAX; i++) {
-    data.push(
-      createPhoto(generateUniquePhotoId, generateUniquePhotoUrlId, generateUniqueCommentId)
-    );
+    data.push(createPhoto(generateUniquePhotoId, generateUniquePhotoUrlId, generateUniqueCommentId));
   }
 
-  return data;
+  return data.filter((p) => p !== null);
 }
 
 generateData();
-// console.log(generateData());
+//console.log(generateData());

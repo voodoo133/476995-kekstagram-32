@@ -99,12 +99,12 @@ function generateComments(generateUniquePhotoId) {
 function createPhoto(generateUniquePhotoId, generateUniquePhotoUrlId, generateUniqueCommentId) {
   const photoId = generateUniquePhotoId();
   if (photoId === null) {
-    return null;
+    throw new Error('Уникальные id для фото закончились');
   }
 
   const photoUrlId = generateUniquePhotoUrlId();
   if (photoUrlId === null) {
-    return null;
+    throw new Error('Уникальные id для адресов фотографий закончились');
   }
 
   return {

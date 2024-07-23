@@ -43,7 +43,7 @@ function generateComments(generateUniquePhotoId) {
     if (commentId === null) {
       break;
     }
-    const avatarId = getRandomInteger(0, 6);
+    const avatarId = getRandomInteger(1, 6);
 
     comments.push({
       id: commentId,

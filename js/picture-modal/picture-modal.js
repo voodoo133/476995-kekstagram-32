@@ -1,9 +1,10 @@
 import { getCommentsListFragment } from './comments.js';
 
+const AMOUNT_COMMENTS_PER_CHUNK = 5;
+
 const modalEl = document.querySelector('.big-picture');
 const closeModalEl = modalEl.querySelector('#picture-cancel');
 const commentsLoadBtn = modalEl.querySelector('.comments-loader');
-const AMOUNT_COMMENTS_PER_CHUNK = 5;
 let modalComments = [];
 let commentsOffset = 0;
 
@@ -28,7 +29,7 @@ const appendCommentsChunk = () => {
     modalEl.querySelector('.social__comments').append(getCommentsListFragment(commentsChunk));
   }
 
-  commentsOffset += Math.min(commentsChunk.length, AMOUNT_COMMENTS_PER_CHUNK);
+  commentsOffset += commentsChunk.length;
   modalEl.querySelector('.social__comment-shown-count').textContent = commentsOffset;
 
   if (commentsOffset >= modalComments.length) {
@@ -54,7 +55,7 @@ const openPictureModal = (url, description, likes, comments) => {
   document.addEventListener('keydown', onEscapeKeyDown);
 };
 
-commentsLoadBtn.addEventListener('click', () => appendCommentsChunk());
-closeModalEl.addEventListener('click', () => closePictureModal());
+commentsLoadBtn.addEventListener('click', appendCommentsChunk);
+closeModalEl.addEventListener('click', closePictureModal);
 
 export { openPictureModal };

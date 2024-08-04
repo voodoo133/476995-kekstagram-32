@@ -1,3 +1,5 @@
+import { resetScale } from './scale-img.js';
+
 const VALID_HASTAG_REGEX = /^#[0-9a-zа-яё]{1,19}$/i;
 const MAX_AMOUNT_HASHTAGS = 5;
 const MAX_COMMENT_LENGTH = 140;
@@ -19,6 +21,7 @@ const closeEditPhotoModal = () => {
   editPhotoModalEl.classList.add('hidden');
   document.body.classList.remove('modal-open');
   fileInputEl.value = '';
+  resetScale();
 };
 
 const onEscapeKeyDown = (e) => {

@@ -1,3 +1,6 @@
+import { initScale, resetScale } from './scale-img.js';
+import { initEffect, resetEffect } from './effect-img.js';
+
 const VALID_HASTAG_REGEX = /^#[0-9a-zа-яё]{1,19}$/i;
 const MAX_AMOUNT_HASHTAGS = 5;
 const MAX_COMMENT_LENGTH = 140;
@@ -18,7 +21,10 @@ const pristine = new Pristine(formEl, {
 const closeEditPhotoModal = () => {
   editPhotoModalEl.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  fileInputEl.value = '';
+  formEl.reset();
+  pristine.reset();
+  resetScale();
+  resetEffect();
 };
 
 const onEscapeKeyDown = (e) => {
@@ -77,6 +83,9 @@ const initUploadForm = () => {
   editPhotoModalCloseEl.addEventListener('click', closeEditPhotoModal);
   initValidateRules();
   formEl.addEventListener('submit', onFormSubmit);
+
+  initScale();
+  initEffect();
 };
 
 export { initUploadForm };

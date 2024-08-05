@@ -14,14 +14,15 @@ const scaleImg = (value) => {
   scaleInputEl.value = `${value}%`;
 };
 
-scaleDownBtn.addEventListener('click', () => {
-  scaleImg(Math.max(parseInt(scaleInputEl.value, 10) - SCALE_STEP, MIN_SCALE_VALUE));
-});
-
-scaleUpBtn.addEventListener('click', () => {
-  scaleImg(Math.min(parseInt(scaleInputEl.value, 10) + SCALE_STEP, MAX_SCALE_VALUE));
-});
-
 const resetScale = () => scaleImg(DEFAULT_SCALE_VALUE);
+const initScale = () => {
+  scaleDownBtn.addEventListener('click', () => {
+    scaleImg(Math.max(parseInt(scaleInputEl.value, 10) - SCALE_STEP, MIN_SCALE_VALUE));
+  });
 
-export { resetScale };
+  scaleUpBtn.addEventListener('click', () => {
+    scaleImg(Math.min(parseInt(scaleInputEl.value, 10) + SCALE_STEP, MAX_SCALE_VALUE));
+  });
+};
+
+export { initScale, resetScale };

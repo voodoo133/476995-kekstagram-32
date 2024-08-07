@@ -1,6 +1,6 @@
 import { getRandomInteger, createUniqueIdGenerator, getRandomValuesFromArray } from './util.js';
 
-function generatePhotoDescription() {
+const generatePhotoDescription = () => {
   const DESCRIPTIONS = [
     'Тут я был', 'Тут я хочу побывать', 'Тут меня приняли росгвардейцы',
     'Тут я провел ночь', 'Тут-тут-тут', 'Тут выступала группа Тутси',
@@ -9,9 +9,9 @@ function generatePhotoDescription() {
   ];
 
   return getRandomValuesFromArray(DESCRIPTIONS, 1).toString();
-}
+};
 
-function generateCommentMessage() {
+const generateCommentMessage = () => {
   const MESSAGES = [
     'Всё отлично!',
     'В целом всё неплохо. Но не всё.',
@@ -24,17 +24,17 @@ function generateCommentMessage() {
   const msgArr = getRandomValuesFromArray(MESSAGES, getRandomInteger(1, 2));
 
   return msgArr.join(' ');
-}
+};
 
-function generateCommentAuthorName() {
+const generateCommentAuthorName = () => {
   const NAMES = ['Астра', 'Аэлита', 'Вевея', 'Византия', 'Вишня', 'Блуд',
     'Боян', 'Воин', 'Горислав', 'Господин', 'Громобой'
   ];
 
   return getRandomValuesFromArray(NAMES, 1).toString();
-}
+};
 
-function generateComments(generateUniquePhotoId) {
+const generateComments = (generateUniquePhotoId) => {
   const maxAmountComments = getRandomInteger(0, 30);
 
   const comments = [];
@@ -54,9 +54,9 @@ function generateComments(generateUniquePhotoId) {
   }
 
   return comments;
-}
+};
 
-function createPhoto(generateUniquePhotoId, generateUniquePhotoUrlId, generateUniqueCommentId) {
+const createPhoto = (generateUniquePhotoId, generateUniquePhotoUrlId, generateUniqueCommentId) => {
   const photoId = generateUniquePhotoId();
   if (photoId === null) {
     throw new Error('Уникальные id для фото закончились');
@@ -74,9 +74,9 @@ function createPhoto(generateUniquePhotoId, generateUniquePhotoUrlId, generateUn
     likes: getRandomInteger(15, 200),
     comments: generateComments(generateUniqueCommentId)
   };
-}
+};
 
-function generateData() {
+const generateData = () => {
   const PHOTO_ID_CONSTRAINS = { MIN: 1, MAX: 25 };
   const PHOTO_URL_ID_CONSTRAINS = { MIN: 1, MAX: 25 };
   const COMMENT_ID_CONSTRAINS = { MIN: 1, MAX: 1000 };
@@ -90,6 +90,6 @@ function generateData() {
   }
 
   return data.filter((p) => p !== null);
-}
+};
 
 export { generateData };

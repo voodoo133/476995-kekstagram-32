@@ -1,12 +1,12 @@
-function getRandomInteger(min, max) {
+const getRandomInteger = (min, max) => {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
   const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
   const result = Math.random() * (upper - lower + 1) + lower;
 
   return Math.floor(result);
-}
+};
 
-function createUniqueIdGenerator(min, max) {
+const createUniqueIdGenerator = (min, max) => {
   const previousIds = [];
 
   return function () {
@@ -23,9 +23,9 @@ function createUniqueIdGenerator(min, max) {
     previousIds.push(id);
     return id;
   };
-}
+};
 
-function getRandomValuesFromArray(arr, amount) {
+const getRandomValuesFromArray = (arr, amount) => {
   const values = [];
 
   while (values.length < amount && values.length !== arr.length) {
@@ -38,6 +38,6 @@ function getRandomValuesFromArray(arr, amount) {
   }
 
   return values;
-}
+};
 
 export { getRandomInteger, createUniqueIdGenerator, getRandomValuesFromArray };

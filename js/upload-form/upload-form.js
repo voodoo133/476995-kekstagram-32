@@ -1,5 +1,6 @@
 import { initScale, resetScale } from './scale-img.js';
 import { initEffect, resetEffect } from './effect-img.js';
+import { sendPicture } from './../api.js';
 
 const VALID_HASTAG_REGEX = /^#[0-9a-zа-яё]{1,19}$/i;
 const MAX_AMOUNT_HASHTAGS = 5;
@@ -9,16 +10,19 @@ const formEl = document.querySelector('#upload-select-image');
 const fileInputEl = formEl.querySelector('#upload-file');
 const hashtagsEl = formEl.querySelector('input[name="hashtags"]');
 const commentEl = formEl.querySelector('textarea[name="description"]');
-//const formSubmitBtn = formEl.querySelector('#upload-submit');
+const formSubmitBtn = formEl.querySelector('#upload-submit');
 const editPhotoModalEl = formEl.querySelector('.img-upload__overlay');
 const editPhotoModalCloseEl = editPhotoModalEl.querySelector('.img-upload__cancel');
+const uploadSuccessMsgTmplEl = document.querySelector('#success').content.querySelector('.success');
+const uploadErrorMsgTmplEl = document.querySelector('#error').content.querySelector('.error');
+
 const pristine = new Pristine(formEl, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'img-upload__field-wrapper--error',
 });
 
-const closeEditPhotoModal = () => {
+const hideModal = () => {
   editPhotoModalEl.classList.add('hidden');
   document.body.classList.remove('modal-open');
   formEl.reset();
@@ -27,17 +31,23 @@ const closeEditPhotoModal = () => {
   resetEffect();
 };
 
-const onEscapeKeyDown = (e) => {
-  if (e.key === 'Escape' && document.activeElement !== hashtagsEl && document.activeElement !== commentEl) {
-    closeEditPhotoModal();
-    document.removeEventListener('keydown', onEscapeKeyDown);
+const closeEditModalByEsc = (e) => {
+  if (e.key === 'Escape' && document.activeElement !== hashtagsEl
+    && document.activeElement !== commentEl && document.querySelector('.error') === null) {
+    hideModal();
+    document.removeEventListener('keydown', closeEditModalByEsc);
   }
+};
+
+const closeEditPhotoModal = () => {
+  hideModal();
+  document.removeEventListener('keydown', closeEditModalByEsc);
 };
 
 const openEditPhotoModal = () => {
   editPhotoModalEl.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  document.addEventListener('keydown', onEscapeKeyDown);
+  document.addEventListener('keydown', closeEditModalByEsc);
 };
 
 const checkHashtagsToCorrect = (value) => {
@@ -71,11 +81,76 @@ const initValidateRules = () => {
   pristine.addValidator(commentEl, checkCommentLength, 'Комментарий не может быть больше 140 символов');
 };
 
-const onFormSubmit = (e) => {
-  //formSubmitBtn.disabled = true;
+const closeUploadSuccessMsgByEsc = (e) => {
+  if (e.key === 'Escape') {
+    document.querySelector('.success').remove();
+    document.removeEventListener('keydown', closeUploadSuccessMsgByEsc);
+  }
+};
 
+const showUploadSuccessMsg = () => {
+  const uploadSuccessMsgEl = uploadSuccessMsgTmplEl.cloneNode(true);
+  const successButton = uploadSuccessMsgEl.querySelector('.success__button');
+  document.body.append(uploadSuccessMsgEl);
+
+  successButton.addEventListener('click', () => {
+    uploadSuccessMsgEl.remove();
+    document.removeEventListener('keydown', closeUploadSuccessMsgByEsc);
+  });
+  uploadSuccessMsgEl.addEventListener('click', (e) => {
+    if (!e.target.closest('.success__inner')) {
+      uploadSuccessMsgEl.remove();
+      document.removeEventListener('keydown', closeUploadSuccessMsgByEsc);
+    }
+  });
+  document.addEventListener('keydown', closeUploadSuccessMsgByEsc);
+};
+
+const closeUploadErrorMsgByEsc = (e) => {
+  if (e.key === 'Escape') {
+    e.stopImmediatePropagation();
+    document.querySelector('.error').remove();
+    document.removeEventListener('keydown', closeUploadErrorMsgByEsc);
+  }
+};
+
+const showUploadErrorMsg = () => {
+  const uploadErrorMsgEl = uploadErrorMsgTmplEl.cloneNode(true);
+  const errorButton = uploadErrorMsgEl.querySelector('.error__button');
+  document.body.append(uploadErrorMsgEl);
+
+  errorButton.addEventListener('click', () => {
+    uploadErrorMsgEl.remove();
+    document.removeEventListener('keydown', closeUploadErrorMsgByEsc);
+  });
+  uploadErrorMsgEl.addEventListener('click', (e) => {
+    if (!e.target.closest('.error__inner')) {
+      uploadErrorMsgEl.remove();
+      document.removeEventListener('keydown', closeUploadErrorMsgByEsc);
+    }
+  });
+  document.addEventListener('keydown', closeUploadErrorMsgByEsc);
+};
+
+const onFormSubmit = (e) => {
   e.preventDefault();
-  pristine.validate();
+  formSubmitBtn.disabled = true;
+
+  if (pristine.validate()) {
+    const formData = new FormData(formEl);
+    sendPicture(
+      formData,
+      () => {
+        closeEditPhotoModal();
+        formSubmitBtn.disabled = false;
+        showUploadSuccessMsg();
+      },
+      () => {
+        formSubmitBtn.disabled = false;
+        showUploadErrorMsg();
+      }
+    );
+  }
 };
 
 const initUploadForm = () => {

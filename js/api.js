@@ -11,7 +11,7 @@ const getPictures = (onSuccess, onError) =>
     .catch((err) => onError(err));
 
 const sendPicture = (formData, onSuccess, onError) =>
-  fetch('https://32.javascript.htmlacademy.pro/kekstagra', { method: 'POST', body: formData })
+  fetch('https://32.javascript.htmlacademy.pro/kekstagram', { method: 'POST', body: formData })
     .then((response) => {
       if (!response.ok) {
         throw new Error(`${response.status} - ${response.statusText}`);

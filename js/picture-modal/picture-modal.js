@@ -9,7 +9,7 @@ let modalComments = [];
 let commentsOffset = 0;
 
 
-const closePictureModal = () => {
+const hidePictureModal = () => {
   commentsLoadBtn.classList.remove('hidden');
   modalEl.classList.add('hidden');
   document.body.classList.remove('modal-open');
@@ -17,9 +17,14 @@ const closePictureModal = () => {
 
 const onEscapeKeyDown = (e) => {
   if (e.key === 'Escape') {
-    closePictureModal();
+    hidePictureModal();
     document.removeEventListener('keydown', onEscapeKeyDown);
   }
+};
+
+const closePictureModal = () => {
+  hidePictureModal();
+  document.removeEventListener('keydown', onEscapeKeyDown);
 };
 
 const appendCommentsChunk = () => {

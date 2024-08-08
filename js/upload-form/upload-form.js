@@ -5,9 +5,11 @@ import { sendPicture } from './../api.js';
 const VALID_HASTAG_REGEX = /^#[0-9a-zа-яё]{1,19}$/i;
 const MAX_AMOUNT_HASHTAGS = 5;
 const MAX_COMMENT_LENGTH = 140;
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const formEl = document.querySelector('#upload-select-image');
 const fileInputEl = formEl.querySelector('#upload-file');
+const imagePreviewEl = formEl.querySelector('.img-upload__preview img');
 const hashtagsEl = formEl.querySelector('input[name="hashtags"]');
 const commentEl = formEl.querySelector('textarea[name="description"]');
 const formSubmitBtn = formEl.querySelector('#upload-submit');
@@ -42,6 +44,19 @@ const closeEditModalByEsc = (e) => {
 const closeEditPhotoModal = () => {
   hideModal();
   document.removeEventListener('keydown', closeEditModalByEsc);
+};
+
+const setPreviewImage = () => {
+  if (fileInputEl.files.length === 1) {
+    const file = fileInputEl.files[0];
+    const fileName = file.name.toLowerCase();
+
+    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+    if (matches) {
+      imagePreviewEl.src = URL.createObjectURL(file);
+    }
+  }
 };
 
 const openEditPhotoModal = () => {
@@ -154,7 +169,10 @@ const onFormSubmit = (e) => {
 };
 
 const initUploadForm = () => {
-  fileInputEl.addEventListener('change', openEditPhotoModal);
+  fileInputEl.addEventListener('change', () => {
+    setPreviewImage();
+    openEditPhotoModal();
+  });
   editPhotoModalCloseEl.addEventListener('click', closeEditPhotoModal);
   initValidateRules();
   formEl.addEventListener('submit', onFormSubmit);

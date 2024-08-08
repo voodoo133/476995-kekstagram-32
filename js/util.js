@@ -40,4 +40,13 @@ const getRandomValuesFromArray = (arr, amount) => {
   return values;
 };
 
-export { getRandomInteger, createUniqueIdGenerator, getRandomValuesFromArray };
+const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+export { getRandomInteger, createUniqueIdGenerator, getRandomValuesFromArray, debounce };

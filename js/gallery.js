@@ -20,6 +20,7 @@ const showErrorMsg = () => {
 };
 
 let pictures = [];
+const doFilter = debounce(renderThumbnails);
 
 const filterPictures = (filterType) => {
   let filteredPictures = [];
@@ -38,7 +39,6 @@ const filterPictures = (filterType) => {
       break;
   }
 
-  const doFilter = debounce(renderThumbnails);
   doFilter(filteredPictures, openPictureModal);
 };
 
